@@ -1,0 +1,22 @@
+[Server]
+Port = 8888
+
+[Gitlab]
+Token = "SECRET-TOKEN"
+
+[CommitLog]
+Type = "logstash"
+Server = "LOGSTASH-SERVER"
+Servicename = "commit-message"
+
+[Slack]
+Token = "SLACK-OAUTH-TOKEN"
+FallbackUser = "SLACK-FALLBACK-USER"
+
+[Filters]
+Startings = ["Merge branch", "Merge remote-tracking", "Revert ", "Automated Jenkins commit"]
+Emails = ["john.doe@example.com"]
+Groups = ["internal"]
+
+[Database]
+Path = "./ref.db"

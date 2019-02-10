@@ -1,0 +1,19 @@
+language: go
+
+go:
+  - '1.11.2'
+
+script:
+  - make build
+  - make dist
+
+deploy:
+  provider: releases
+  skip_cleanup: true
+  api_key:
+    secure: jnBeclsfs2kT+qK756PY5CPDTcQTOQ1RJvYtL8UUWvO8bG5keTtso2k6u9nSyxVwUjC0khwi7bwYW4jRE1qoX1yyLU0aIQrqrLvg8O5vYiLp1b8zjsVumCAg20LUseVEd8lEqRjXYyQ97MNMKu4SDM1tDG44gEfZ1dYkMBBker0NOcEXq9huCcC1+2mnBq/L0358774UGj3dAqWoUb9UkDDpVHWsDNOkAKlXrX8gcDGD6IHrkcVzFBWY+owlgzla+NwGtJEVQnio2xhVgW4WH6t0JDWSb72e8Wq0P5SgNI7lVHSU2K/yEiPAGeEGW8pS1RxONbgm/GIeFaZtP0tXV4RrGWEN2XrDTk+hAm+lSGI/d8yitojJBQiOIXopdwhMecZ2njzzigOIIG5ls7gJtQGrtqgNQEYFgoRbYeCVpFjJ4s/QgZdgfLfGeBLmSH0kovVYR3sDJl2KwinVuThL/6nrLzsJszvP1wQwHQgP+J/dGMmyLQ3Y50XLZtnzWJCBjhLHkeNQ9OkqrLlUR1oHM05ER2pRj6EscwO5qVFNcbe0kNWW/exQtyUR6h5QJxp3nm26KMfp08IAVpeZtMHLsikxBkFQe1ndD1bSnsoVlmQAB/H2oBo10oP2Qhl0w6KdsrLy0Yxn6Zi26KYzVBnwo4xcjwwM5iIXh3K/lnPcKBU=
+  file_glob: true
+  file: dist/*
+  on:
+    tags: true
+    repo: karriereat/commit-message-bot
