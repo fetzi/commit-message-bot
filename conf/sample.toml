@@ -6,7 +6,7 @@ Port = 8888
 Token = "SECRET-TOKEN"
 
 [CommitLog]
-Type = "logstash"
+Type = "logstash" # Type can also be set to "file", this will output the commit log info on stdout
 Server = "LOGSTASH-SERVER"
 Servicename = "commit-message"
 
