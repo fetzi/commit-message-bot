@@ -1,4 +1,5 @@
 [Server]
+LogLevel = "debug"
 Port = 8888
 
 [Gitlab]
@@ -11,6 +12,7 @@ Servicename = "commit-message"
 
 [Slack]
 Token = "SLACK-OAUTH-TOKEN"
+Emoji = ":cop:"
 FallbackUser = "SLACK-FALLBACK-USER"
 
 [Filters]

@@ -28,26 +28,21 @@ type StructureValidator struct{}
 
 // Validate checks the structure of the commit message
 func (sv StructureValidator) Validate(c gitlab.Commit) error {
-	regex, _ := regexp.Compile("(.*)\n\n([\\S\\s]*)")
+	subject, body, err := extractSubjectAndBody(c.Message)
 
-	structureMatches := regex.FindStringSubmatch(c.Message)
-
-	if len(structureMatches) == 3 {
-		subject := structureMatches[1]
-		body := structureMatches[2]
-
-		if subject == "" {
-			return errors.New("Subject line cannot be empty")
-		}
-
-		if body == "" {
-			return errors.New("Body cannot be empty")
-		}
-
-		return nil
+	if err != nil {
+		return err
 	}
 
-	return errors.New("Subject-Body structure not present")
+	if subject == "" {
+		return errors.New("Subject line cannot be empty")
+	}
+
+	if body == "" {
+		return errors.New("Body cannot be empty")
+	}
+
+	return nil
 }
 
 // SubjectValidator defines a validator for the subject line
@@ -55,35 +50,31 @@ type SubjectValidator struct{}
 
 // Validate checks the subject line of the given commit
 func (sv SubjectValidator) Validate(c gitlab.Commit) error {
-	regex, _ := regexp.Compile("(.*)\n\n")
+	subject, _, err := extractSubjectAndBody(c.Message)
 
-	subjectMatch := regex.FindStringSubmatch(c.Message)
-
-	if len(subjectMatch) == 2 {
-		subject := subjectMatch[1]
-
-		firstChar := subject[:1]
-
-		if strings.ToUpper(firstChar) != firstChar {
-			return errors.New("First character of subject must be upper case")
-		}
-
-		if len(subject) > 50 {
-			return errors.New("Subject line is limited to 50 characters")
-		}
-
-		punktuationMarks := []string{"!", "?", "."}
-
-		for _, punktuationMark := range punktuationMarks {
-			if strings.HasSuffix(subject, punktuationMark) {
-				return errors.New("Subject should not end with a punctuation mark")
-			}
-		}
-
-		return nil
+	if err != nil {
+		return err
 	}
 
-	return errors.New("Subject-Body structure not present")
+	firstChar := subject[:1]
+
+	if strings.ToUpper(firstChar) != firstChar {
+		return errors.New("First character of subject must be upper case")
+	}
+
+	if len(subject) > 50 {
+		return errors.New("Subject line is limited to 50 characters")
+	}
+
+	punktuationMarks := []string{"!", "?", "."}
+
+	for _, punktuationMark := range punktuationMarks {
+		if strings.HasSuffix(subject, punktuationMark) {
+			return errors.New("Subject should not end with a punctuation mark")
+		}
+	}
+
+	return nil
 }
 
 // BodyValidator defines a validator for the commit body
@@ -91,25 +82,21 @@ type BodyValidator struct{}
 
 // Validate checks the body line lengths and structure
 func (bv BodyValidator) Validate(c gitlab.Commit) error {
-	regex, _ := regexp.Compile("\n\n([\\S\\s]*)")
+	_, body, err := extractSubjectAndBody(c.Message)
 
-	bodyMatches := regex.FindStringSubmatch(c.Message)
-
-	if len(bodyMatches) == 2 {
-		body := bodyMatches[1]
-
-		bodyLines := strings.Split(body, "\n")
-
-		for _, line := range bodyLines {
-			if len(line) > 72 {
-				return errors.New("Body lines should be wrapped after 72 characters")
-			}
-		}
-
-		return nil
+	if err != nil {
+		return err
 	}
 
-	return errors.New("Body cannot be extracted")
+	bodyLines := strings.Split(body, "\n")
+
+	for _, line := range bodyLines {
+		if len(line) > 72 {
+			return errors.New("Body lines should be wrapped after 72 characters")
+		}
+	}
+
+	return nil
 }
 
 // TicketNumberValidator defines a validator for ticket numbers in commits
@@ -117,12 +104,11 @@ type TicketNumberValidator struct{}
 
 // Validate checks for ticket numbers in the commit message and for their position
 func (tnv TicketNumberValidator) Validate(c gitlab.Commit) error {
-	regex, _ := regexp.Compile("(.*)\n\n([\\S\\s]*)")
+	subject, body, err := extractSubjectAndBody(c.Message)
 
-	matches := regex.FindStringSubmatch(c.Message)
-
-	subject := matches[1]
-	body := matches[2]
+	if err != nil {
+		return err
+	}
 
 	ticketNumberPattern, _ := regexp.Compile("[\\w]{4,6}-[\\d]{3,6}")
 
@@ -149,4 +135,17 @@ func (tnv TicketNumberValidator) Validate(c gitlab.Commit) error {
 	}
 
 	return nil
+}
+
+// extractSubjectAndBody returns the subject, the body and an error if a part is missing
+func extractSubjectAndBody(message string) (string, string, error) {
+	regex, _ := regexp.Compile("(.*)\n\n([\\S\\s]*)")
+
+	structureMatches := regex.FindStringSubmatch(message)
+
+	if len(structureMatches) == 3 {
+		return structureMatches[1], structureMatches[2], nil
+	}
+
+	return "", "", errors.New("Subject-Body structure not present")
 }

@@ -11,14 +11,16 @@ import (
 // SlackNotifier struct
 type SlackNotifier struct {
 	client       *slack.Client
+	emoji        string
 	fallbackUser string
 }
 
 // NewSlackNotifier creates a new notifier instance
 func NewSlackNotifier(config *config.Config) *SlackNotifier {
 	return &SlackNotifier{
-		slack.New(config.SlackToken),
-		config.SlackFallbackUser,
+		slack.New(config.Slack.Token),
+		config.Slack.Emoji,
+		config.Slack.FallbackUser,
 	}
 }
 
@@ -62,7 +64,7 @@ func (n SlackNotifier) Send(project gitlab.Project, commit gitlab.Commit, messag
 
 	params := slack.PostMessageParameters{
 		Username:  "Better Git Bot",
-		IconEmoji: ":gitlab:",
+		IconEmoji: n.emoji,
 	}
 
 	_, _, err = n.client.PostMessage(

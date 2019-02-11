@@ -28,7 +28,7 @@ func (s *Server) AddRoute(path string, handler http.Handler) {
 
 // Run starts the http server
 func (s *Server) Run() {
-	log.Info(fmt.Sprintf("Starting commit-message server on port %d", s.port))
+	log.Info(fmt.Sprintf("Starting commit-message-bot on port %d", s.port))
 
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", s.port), s.router))
 }

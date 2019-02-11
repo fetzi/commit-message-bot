@@ -31,10 +31,10 @@ func NewBoltRefStore(dbPath string) (*BoltRefStore, error) {
 }
 
 // Put stores the given key value pair in the database
-func (r *BoltRefStore) Put(key, value string) {
+func (r *BoltRefStore) Put(key string) {
 	r.db.Update(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte("refstore"))
-		return b.Put([]byte(key), []byte(value))
+		return b.Put([]byte(key), []byte{})
 	})
 }
 

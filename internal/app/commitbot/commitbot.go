@@ -20,11 +20,11 @@ type Bot struct {
 
 // NewBot creates a new bot instance and adds the route handlers
 func NewBot(config *config.Config) *Bot {
-	srv := server.NewServer(config.Port)
+	srv := server.NewServer(config.Server.Port)
 
 	commitLogger := buildCommitLogger(config)
 	notifier := notifier.NewSlackNotifier(config)
-	refStore, err := refstore.NewBoltRefStore(config.DatabasePath)
+	refStore, err := refstore.NewBoltRefStore(config.Database.Path)
 
 	if err != nil {
 		log.Error(err)
@@ -46,15 +46,15 @@ func (b *Bot) Run() {
 func buildCommitLogger(config *config.Config) *log.Logger {
 	commitLogger := log.New()
 
-	if config.CommitLogType == "logstash" {
+	if config.CommitLog.Type == "logstash" {
 		commitLogger.SetFormatter(&log.JSONFormatter{})
 
 		hook, _ := logrustash.NewHookWithFields(
 			"udp",
-			config.CommitLogServer,
+			config.CommitLog.Server,
 			"commit-message-bot",
 			log.Fields{
-				"service": config.CommitLogServicename,
+				"service": config.CommitLog.Servicename,
 			},
 		)
 

@@ -2,6 +2,6 @@ package refstore
 
 // RefStore interface
 type RefStore interface {
-	Put(key, value string)
+	Put(key string)
 	Exists(key string) bool
 }

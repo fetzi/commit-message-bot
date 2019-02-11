@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"encoding/json"
 	"net/http"
 	"fmt"
 
@@ -16,7 +15,9 @@ import (
 
 // GitlabHookHandler struct
 type GitlabHookHandler struct {
-	conf *config.Config
+	hook *gitlab.Webhook
+	filters []filter.Filter
+	validators []validator.Validator
 	commitLogger *log.Logger
 	notifier notifier.Notifier
 	refStore refstore.RefStore
@@ -24,8 +25,12 @@ type GitlabHookHandler struct {
 
 // NewGitlabHookHandler creates a new GitlabHookHandler instance
 func NewGitlabHookHandler(conf *config.Config, commitLogger *log.Logger, notifier notifier.Notifier, refStore refstore.RefStore) *GitlabHookHandler {
+	hook, _ := gitlab.New(gitlab.Options.Secret(conf.Gitlab.Token))
+
 	return &GitlabHookHandler{
-		conf,
+		hook,
+		filter.GetFilters(conf),
+		validator.GetValidators(),
 		commitLogger,
 		notifier,
 		refStore,
@@ -34,13 +39,11 @@ func NewGitlabHookHandler(conf *config.Config, commitLogger *log.Logger, notifie
 
 // ServeHTTP handles the gitlab hook request
 func (handler GitlabHookHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	hook, _ := gitlab.New(gitlab.Options.Secret(handler.conf.GitlabToken))
-
-	payload, err := hook.Parse(r, gitlab.PushEvents)
+	payload, err := handler.hook.Parse(r, gitlab.PushEvents)
 
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		fmt.Printf("%+v", err)
+		log.Warn(err)
 		return
 	}
 
@@ -48,25 +51,23 @@ func (handler GitlabHookHandler) ServeHTTP(w http.ResponseWriter, r *http.Reques
 	case gitlab.PushEventPayload:
 		event := payload.(gitlab.PushEventPayload)
 
-		filters := filter.GetFilters(handler.conf)
-
-		for _, filter := range filters {
+		for _, filter := range handler.filters {
 			if filter.Filter(event) {
-				w.WriteHeader(http.StatusOK)
+				log.Debug("Event filtered")
+				w.WriteHeader(http.StatusNoContent)
 				return
 			}
 		}
 
-		validators := validator.GetValidators()
-
 		for _, commit := range event.Commits {
 
 			if handler.refStore.Exists(commit.ID) {
+				log.Debug(fmt.Sprintf("Skipping commit %s because it was already validated", commit.ID))
 				continue
 			}
 
 			hasError := false
-			for _, validator := range validators {
+			for _, validator := range handler.validators {
 				err := validator.Validate(commit)
 
 				if err != nil {
@@ -94,19 +95,9 @@ func (handler GitlabHookHandler) ServeHTTP(w http.ResponseWriter, r *http.Reques
 				}).Info("Successfully validated commit")
 			}
 
-			handler.refStore.Put(commit.ID, event.Project.PathWithNamespace)
+			handler.refStore.Put(commit.ID)
 		}
 	}
 
-	w.WriteHeader(http.StatusOK)
-}
-
-func respondSuccess(message string, w http.ResponseWriter) {
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	data := make(map[string]string)
-	data["message"] = message
-
-	json, _ := json.Marshal(data)
-	w.Write(json)
+	w.WriteHeader(http.StatusNoContent)
 }

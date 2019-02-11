@@ -7,58 +7,47 @@ import (
 
 // Config struct
 type Config struct {
-	Port                 int
-	GitlabToken          string
-	SlackToken           string
-	SlackFallbackUser    string
-	FilteredStartings    []string
-	FilteredEmails       []string
-	FilteredGroups       []string
-	CommitLogType        string
-	CommitLogServer      string
-	CommitLogServicename string
-	DatabasePath         string
-}
-
-// Init does the configuration init
-func Init() error {
-	viper.SetConfigName("config")
-	viper.AddConfigPath(".")
-
-	err := viper.ReadInConfig()
-
-	if err != nil {
-		return errors.Wrap(err, "Unable to read config file")
+	Server struct {
+		LogLevel string
+		Port     int
 	}
-
-	return nil
+	Gitlab struct {
+		Token string
+	}
+	CommitLog struct {
+		Type        string
+		Server      string
+		Servicename string
+	}
+	Slack struct {
+		Emoji        string
+		Token        string
+		FallbackUser string
+	}
+	Filters struct {
+		Startings []string
+		Email     []string
+		Groups    []string
+	}
+	Database struct {
+		Path string
+	}
 }
 
 // Load loads the configuration from viper and returns a Config instance
-func Load() *Config {
-	port := viper.GetInt("Server.Port")
-	gitlabToken := viper.GetString("Gitlab.Token")
-	slackToken := viper.GetString("Slack.Token")
-	slackFallbackUser := viper.GetString("Slack.FallbackUser")
-	startings := viper.GetStringSlice("Filters.Startings")
-	emails := viper.GetStringSlice("Filters.Emails")
-	groups := viper.GetStringSlice("Filters.Groups")
-	commitLogType := viper.GetString("CommitLog.Type")
-	commitLogServer := viper.GetString("CommitLog.Server")
-	commitLogSericename := viper.GetString("CommitLog.Servicename")
-	dbPath := viper.GetString("Database.Path")
+func Load(cfgFile string) (*Config, error) {
+	viper.SetConfigFile(cfgFile)
+	err := viper.ReadInConfig()
 
-	return &Config{
-		port,
-		gitlabToken,
-		slackToken,
-		slackFallbackUser,
-		startings,
-		emails,
-		groups,
-		commitLogType,
-		commitLogServer,
-		commitLogSericename,
-		dbPath,
+	if err != nil {
+		return nil, errors.Wrap(err, "Unable to read config file")
 	}
+	var conf Config
+
+	err = viper.Unmarshal(&conf)
+	if err != nil {
+		return nil, errors.Wrap(err, "Unable to unmarshal config")
+	}
+
+	return &conf, nil
 }

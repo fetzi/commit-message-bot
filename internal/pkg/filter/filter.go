@@ -15,13 +15,13 @@ type Filter interface {
 func GetFilters(conf *config.Config) []Filter {
 	return []Filter{
 		BodyStartsWithFilter{
-			conf.FilteredStartings,
+			conf.Filters.Startings,
 		},
 		EmailFilter{
-			conf.FilteredEmails,
+			conf.Filters.Email,
 		},
 		GroupFilter{
-			conf.FilteredGroups,
+			conf.Filters.Groups,
 		},
 	}
 }

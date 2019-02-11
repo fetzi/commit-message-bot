@@ -63,7 +63,7 @@ var subjectValidatorTests = []ValidatorTest{
 var bodyValidatorTests = []ValidatorTest{
 	ValidatorTest{
 		"Commit message",
-		errors.New("Body cannot be extracted"),
+		errors.New("Subject-Body structure not present"),
 	},
 	ValidatorTest{
 		"Subject line \n\nBody with a too long content exceeding 72 characters characters characters",
