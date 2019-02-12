@@ -10,4 +10,4 @@ A bot that validates gitlab commit messages and informs the commit author about 
 
 - copy the `sample.toml` from `/conf` and edit it to your needs
 - run `commit-message-bot`
-- Point the gitlab webhook to `http://your.domain/hooks/commit-message`
+- Point the gitlab webhook to `http://your.domain/hooks/gitlab`
