@@ -13,7 +13,7 @@ Servicename = "commit-message"
 
 [Slack]
 Token = "SLACK-OAUTH-TOKEN"
-Emoji = ":cop:"
+IconEmoji = ":cop:"
 FallbackUser = "SLACK-FALLBACK-USER"
 
 [Filters]
