@@ -3,6 +3,11 @@ language: go
 go:
   - '1.11.2'
 
+env:
+  - GO111MODULE=on
+
+install: true
+
 script:
   - make build
   - make dist
