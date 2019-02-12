@@ -1,5 +1,6 @@
-[Server]
 LogLevel = "debug"
+
+[Server]
 Port = 8888
 
 [Gitlab]

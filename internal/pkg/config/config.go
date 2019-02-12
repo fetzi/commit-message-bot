@@ -7,9 +7,9 @@ import (
 
 // Config struct
 type Config struct {
-	Server struct {
-		LogLevel string
-		Port     int
+	LogLevel string
+	Server   struct {
+		Port int
 	}
 	Gitlab struct {
 		Token string
@@ -20,7 +20,7 @@ type Config struct {
 		Servicename string
 	}
 	Slack struct {
-		Emoji        string
+		IconEmoji    string
 		Token        string
 		FallbackUser string
 	}

@@ -32,7 +32,7 @@ func NewBot(config *config.Config) *Bot {
 
 	handler := handler.NewGitlabHookHandler(config, commitLogger, notifier, refStore)
 
-	srv.AddRoute("/hooks/commit-message", handler)
+	srv.AddRoute("/hooks/gitlab", handler)
 
 	return &Bot{srv}
 }

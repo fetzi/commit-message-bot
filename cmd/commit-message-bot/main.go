@@ -30,10 +30,10 @@ func main() {
 		os.Exit(1)
 	}
 
-	level, err := log.ParseLevel(c.Server.LogLevel)
+	level, err := log.ParseLevel(c.LogLevel)
 
 	if err != nil {
-		log.Error(fmt.Sprintf("Invalid log level: %s", c.Server.LogLevel))
+		log.Error(fmt.Sprintf("Invalid log level: %s", c.LogLevel))
 	} else {
 		log.SetLevel(level)
 	}

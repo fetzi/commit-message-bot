@@ -95,7 +95,7 @@ func (handler GitlabHookHandler) ServeHTTP(w http.ResponseWriter, r *http.Reques
 				}).Info("Successfully validated commit")
 			}
 
-			handler.refStore.Put(commit.ID)
+			handler.refStore.Put(commit.ID, commit.ID)
 		}
 	}
 

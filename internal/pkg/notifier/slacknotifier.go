@@ -19,7 +19,7 @@ type SlackNotifier struct {
 func NewSlackNotifier(config *config.Config) *SlackNotifier {
 	return &SlackNotifier{
 		slack.New(config.Slack.Token),
-		config.Slack.Emoji,
+		config.Slack.IconEmoji,
 		config.Slack.FallbackUser,
 	}
 }
