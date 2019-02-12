@@ -7,4 +7,4 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 - Rewrite of better-git PHP bot
-- Gitlab hook endpoin `/hooks/commit-message`
+- Gitlab hook endpoint `/hooks/gitlab`
