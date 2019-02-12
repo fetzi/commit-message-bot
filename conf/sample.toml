@@ -1,0 +1,25 @@
+LogLevel = "debug"
+
+[Server]
+Port = 8888
+
+[Gitlab]
+Token = "SECRET-TOKEN"
+
+[CommitLog]
+Type = "logstash" # Type can also be set to "file", this will output the commit log info on stdout
+Server = "LOGSTASH-SERVER"
+Servicename = "commit-message"
+
+[Slack]
+Token = "SLACK-OAUTH-TOKEN"
+IconEmoji = ":cop:"
+FallbackUser = "SLACK-FALLBACK-USER"
+
+[Filters]
+Startings = ["Merge branch", "Merge remote-tracking", "Revert ", "Automated Jenkins commit"]
+Emails = ["john.doe@example.com"]
+Groups = ["internal"]
+
+[Database]
+Path = "./ref.db"
