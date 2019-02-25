@@ -1,26 +1,26 @@
 package handler
 
 import (
-	"net/http"
 	"fmt"
+	"net/http"
 
 	"github.com/karriereat/commit-message-bot/internal/pkg/config"
 	"github.com/karriereat/commit-message-bot/internal/pkg/filter"
-	"github.com/karriereat/commit-message-bot/internal/pkg/validator"
 	"github.com/karriereat/commit-message-bot/internal/pkg/notifier"
 	"github.com/karriereat/commit-message-bot/internal/pkg/refstore"
+	"github.com/karriereat/commit-message-bot/internal/pkg/validator"
 	log "github.com/sirupsen/logrus"
 	"gopkg.in/go-playground/webhooks.v5/gitlab"
 )
 
 // GitlabHookHandler struct
 type GitlabHookHandler struct {
-	hook *gitlab.Webhook
-	filters []filter.Filter
-	validators []validator.Validator
+	hook         *gitlab.Webhook
+	filters      []filter.Filter
+	validators   []validator.Validator
 	commitLogger *log.Logger
-	notifier notifier.Notifier
-	refStore refstore.RefStore
+	notifier     notifier.Notifier
+	refStore     refstore.RefStore
 }
 
 // NewGitlabHookHandler creates a new GitlabHookHandler instance
@@ -80,7 +80,7 @@ func (handler GitlabHookHandler) ServeHTTP(w http.ResponseWriter, r *http.Reques
 
 					notifierError := handler.notifier.Send(event.Project, commit, err.Error())
 
-					if (notifierError != nil) {
+					if notifierError != nil {
 						log.Error(notifierError)
 					}
 					break

@@ -38,22 +38,22 @@ func (n SlackNotifier) Send(project gitlab.Project, commit gitlab.Commit, messag
 		Title:     message,
 		TitleLink: commit.URL,
 		Fields: []slack.AttachmentField{
-			slack.AttachmentField{
+			{
 				Title: "Project",
 				Value: project.PathWithNamespace,
 				Short: true,
 			},
-			slack.AttachmentField{
+			{
 				Title: "Author",
 				Value: fmt.Sprintf("%s (%s)", commit.Author.Name, commit.Author.Email),
 				Short: true,
 			},
-			slack.AttachmentField{
+			{
 				Title: "Commit ID",
 				Value: commit.ID,
 				Short: false,
 			},
-			slack.AttachmentField{
+			{
 				Title: "Message",
 				Value: commit.Message,
 				Short: false,

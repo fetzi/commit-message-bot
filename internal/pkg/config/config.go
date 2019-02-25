@@ -26,7 +26,7 @@ type Config struct {
 	}
 	Filters struct {
 		Startings []string
-		Email     []string
+		Emails    []string
 		Groups    []string
 	}
 	Database struct {
