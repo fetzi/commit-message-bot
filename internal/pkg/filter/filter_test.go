@@ -12,26 +12,26 @@ type FilterTest struct {
 }
 
 var bodyStartsWithTests = []FilterTest{
-	FilterTest{"Foo", false},
-	FilterTest{"Merge branch foo into bar", true},
-	FilterTest{"Revert test", true},
-	FilterTest{"Reverts test", false},
-	FilterTest{"Automated Jenkins commit", true},
-	FilterTest{"This is an automated Jenkins commit", false},
+	{"Foo", false},
+	{"Merge branch foo into bar", true},
+	{"Revert test", true},
+	{"Reverts test", false},
+	{"Automated Jenkins commit", true},
+	{"This is an automated Jenkins commit", false},
 }
 
 var emailFilterTests = []FilterTest{
-	FilterTest{"office@karriere.at", false},
-	FilterTest{"dev-test@karriere.at", false},
-	FilterTest{"lead-dev@karriere.at", false},
-	FilterTest{"dev@karriere.at", true},
+	{"office@karriere.at", false},
+	{"dev-test@karriere.at", false},
+	{"lead-dev@karriere.at", false},
+	{"dev@karriere.at", true},
 }
 
 var groupFilterTests = []FilterTest{
-	FilterTest{"karriere/site", false},
-	FilterTest{"api/api", false},
-	FilterTest{"jobs/foo", true},
-	FilterTest{"legacy/bar", true},
+	{"karriere/site", false},
+	{"api/api", false},
+	{"jobs/foo", true},
+	{"legacy/bar", true},
 }
 
 func TestBodyStartsWithFilter(t *testing.T) {
@@ -97,7 +97,7 @@ func TestGroupFilter(t *testing.T) {
 func makeEventWithCommit(message string) gitlab.PushEventPayload {
 	return gitlab.PushEventPayload{
 		Commits: []gitlab.Commit{
-			gitlab.Commit{Message: message},
+			{Message: message},
 		},
 	}
 }
@@ -105,7 +105,7 @@ func makeEventWithCommit(message string) gitlab.PushEventPayload {
 func makeEventWithAuthor(email string) gitlab.PushEventPayload {
 	return gitlab.PushEventPayload{
 		Commits: []gitlab.Commit{
-			gitlab.Commit{
+			{
 				Author: gitlab.Author{Email: email},
 			},
 		},

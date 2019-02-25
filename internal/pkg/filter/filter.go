@@ -12,6 +12,7 @@ type Filter interface {
 	Filter(ev gitlab.PushEventPayload) bool
 }
 
+// GetFilters builds the filters with the given config
 func GetFilters(conf *config.Config) []Filter {
 	return []Filter{
 		BodyStartsWithFilter{
