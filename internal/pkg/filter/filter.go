@@ -18,7 +18,7 @@ func GetFilters(conf *config.Config) []Filter {
 			conf.Filters.Startings,
 		},
 		EmailFilter{
-			conf.Filters.Email,
+			conf.Filters.Emails,
 		},
 		GroupFilter{
 			conf.Filters.Groups,
