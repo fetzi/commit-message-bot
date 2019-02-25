@@ -2,8 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
-## Unreleased
+## [v0.1.1] - 2019-02-25
+### Changed
+- apply gofmt simplify
 
+### Fixed
+- Wrong config key name
+
+## [v0.1.0] - 2019-02-12  
 ### Added
 
 - Rewrite of better-git PHP bot
