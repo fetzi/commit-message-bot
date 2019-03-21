@@ -42,6 +42,9 @@ func (handler GitlabHookHandler) ServeHTTP(w http.ResponseWriter, r *http.Reques
 	payload, err := handler.hook.Parse(r, gitlab.PushEvents)
 
 	if err != nil {
+
+
+
 		w.WriteHeader(http.StatusBadRequest)
 		log.Warn(err)
 		return
