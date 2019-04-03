@@ -101,6 +101,10 @@ var ticketNumberValidatorTests = []ValidatorTest{
 		nil,
 	},
 	{
+		"Subject line\n\nMessage\n\nResolves:  KSWAT-1234",
+		nil,
+	},
+	{
 		"Subject line\n\nMessage\n\nResolves KSWAT-1234",
 		nil,
 	},

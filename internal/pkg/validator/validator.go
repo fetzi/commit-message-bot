@@ -119,7 +119,7 @@ func (tnv TicketNumberValidator) Validate(c gitlab.Commit) error {
 	if ticketNumberPattern.MatchString(body) {
 		correctTicketRefs := 0
 
-		prefixedTicketNumberPattern, _ := regexp.Compile("^(Resolves|See):? ([\\w]{4,8}-[\\d]{3,6}(, )*)+$")
+		prefixedTicketNumberPattern, _ := regexp.Compile("^(Resolves|See):?[\\s]+([\\w]{4,8}-[\\d]{3,6}(, )*)+$")
 
 		bodyLines := strings.Split(body, "\n")
 
